@@ -110,8 +110,15 @@ fun! s:RgPathContext(search, txt)
 endfun
 
 fun! s:RgHighlight(txt)
-  let @/=escape(substitute(a:txt, '"', '', 'g'), '|')
-  call feedkeys(":let &hlsearch=1\<CR>", 'n')
+  let q = matchstr(a:txt, "\\v(-)\@<!(\<)\@<=\\w+|['\"]\\zs.{-}\\ze['\"]")
+
+  " Poor man's one-off smartcase.
+  if q !~# '[A-Z]'
+      let q = q . '\c'
+  endif
+
+  let @/ = q
+  call feedkeys(":let &hlsearch=1 \| echo \<CR>", "n")
 endfun
 
 fun! s:RgRootDir()
