@@ -65,6 +65,11 @@ fun! s:RgSearch(txt)
   if len(getqflist())
     exe g:rg_window_location 'copen'
     redraw!
+
+    " Resize the quickfix window to half the screen height
+    let l:half_height = float2nr(&lines / 2)
+    exe l:half_height . 'wincmd _'
+
     if exists('g:rg_highlight')
       call s:RgHighlight(a:txt)
     endif
